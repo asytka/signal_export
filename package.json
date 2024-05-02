@@ -15,5 +15,8 @@
     "url": "https://github.com/asytka/signal_export/issues"
   },
   "homepage": "https://github.com/asytka/signal_export#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "@yao-pkg/pkg": "^5.11.5"
+  }
 }
