@@ -8,16 +8,20 @@ const folderPath = './messages';
 fs.mkdir(folderPath, () => {});
 
 function getFolderPath() {
-    return path.join(os.homedir(), 'AppData/Roaming/Signal');
+    if (process.platform === 'win32') {
+        return path.join(os.homedir(), 'AppData', 'Roaming', 'Signal');
+    }
+    return path.join(os.homedir(), '.config', 'signal');
 }
 
 function getDBPath() {
-    return path.join(getFolderPath(), 'sql/db.sqlite');
+    return path.join(getFolderPath(), 'sql', 'db.sqlite');
 }
 
 function getDBKey() {
-    const config = path.join(getFolderPath(), 'config.json');
-    return JSON.parse(fs.readFileSync(config).toString())['key'];
+    const configPath = path.join(getFolderPath(), 'config.json');
+    const config = JSON.parse(fs.readFileSync(configPath).toString());
+    return config.key;
 }
 
 function getLocalTime(timestamp) {
