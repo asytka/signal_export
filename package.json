@@ -1,0 +1,19 @@
+{
+  "name": "signal_export",
+  "version": "1.0.0",
+  "main": "signal-db.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asytka/signal_export.git"
+  },
+  "author": "asytka",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/asytka/signal_export/issues"
+  },
+  "homepage": "https://github.com/asytka/signal_export#readme",
+  "description": ""
+}
