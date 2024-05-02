@@ -56,7 +56,7 @@ const jsonData = JSON.stringify(convRes);
 db.close();
 
 // Log success message
-console.log(`Messages saved to ${process.cwd()}\\messages.json`);
+console.log(`Messages saved to ${process.cwd()}\\messages folder`);
 
 // Wait for user input before exiting
 require('readline')
