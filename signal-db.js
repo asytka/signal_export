@@ -1,11 +1,12 @@
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
-const SQL = require('@signalapp/better-sqlite3');
+const SQL = require('./node_modules/@signalapp/better-sqlite3');
 
-const folderPath = './messages';
+const folderPath = ['./messages/json', './messages/text'];
 
-fs.mkdir(folderPath, () => {});
+for (var i in folderPath) fs.mkdir(folderPath[i], () => {});
+
 
 function getFolderPath() {
     if (process.platform === 'win32') {
@@ -33,16 +34,28 @@ const db = SQL(getDBPath(), { readonly: true });
 
 db.pragma(`key = "x'${getDBKey()}'"`);
 
-const conv = db.prepare(`SELECT id, name FROM conversations WHERE type = 'group' OR type = 'private'`);
+const conv_stmt = db.prepare(`SELECT id, name, type FROM conversations WHERE type = 'group' OR type = 'private'`);
 
 
-for (const convi of conv.iterate()) {
-    const msg = db.prepare(`SELECT type, body, sent_at FROM messages WHERE ConversationId = ?`);
-    const msgsForConv = msg.all(convi.id); 
-    for (const msg of msgsForConv) msg.sent_at = getLocalTime(msg.sent_at);
+for (const conv_i of conv_stmt.iterate()) {
+    const msg_stmt = db.prepare(`SELECT type, body, sent_at FROM messages WHERE ConversationId = ?`);
+    const msg = msg_stmt.all(conv_i.id); 
+    for (const msg_i of msg) msg_i.sent_at = getLocalTime(msg_i.sent_at);
 
-    const jsonData = JSON.stringify(msgsForConv);
-    fs.writeFileSync(`messages/${convi.name}.json`, jsonData, 'utf8');
+    const jsonData = JSON.stringify(msg);
+    var Data = `Чат: ${conv_i.name} (${conv_i.type}) \n\n`;
+    for (const msg_i of msg) {
+        if (msg_i.type == 'group-v2-change') { 
+            Data += `Створення групи: ${msg_i.sent_at}\n`;
+        }
+        else {
+            Data += `Час: ${msg_i.sent_at} \nТекст: ${msg_i.body} \nВідправник ${msg_i.type}\n`;
+        }
+        Data += "\n";
+    }
+    fs.writeFileSync(`messages/text/${conv_i.name}.txt`, Data, 'utf8');
+    fs.writeFileSync(`messages/json/${conv_i.name}.json`, jsonData, 'utf8');
+
 }
 
 
