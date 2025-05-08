@@ -1,4 +1,4 @@
-signal_export is a utility to export messages from Signal Desktop.
+signal_export is an utility to export messages from Signal Desktop.
 
 Usage:
 run signal-db-win.exe or execute "node signal-db.js" in the command prompt.
